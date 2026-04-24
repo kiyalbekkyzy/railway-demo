@@ -4,10 +4,8 @@ import os
 
 app = Flask(__name__)
 
-# 👉 Railway даёт DATABASE_URL автоматически
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# 🔥 ВАЖНО: защита от падения если БД не подключилась
 def get_conn():
     if not DATABASE_URL:
         raise Exception("DATABASE_URL is not set")
@@ -28,7 +26,6 @@ def get_data():
         cur.close()
         conn.close()
 
-        # форматируем нормально в JSON
         result = [{"id": r[0], "name": r[1]} for r in rows]
 
         return jsonify(result)
@@ -85,8 +82,8 @@ def delete_data(id):
 
 
 # ---------------------------
-# IMPORTANT FOR RAILWAY
+# 🔥 ВАЖНО: ЗАПУСК СЕРВЕРА (FIX RAILWAY)
 # ---------------------------
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # 🔥 FIX FOR RAILWAY
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
